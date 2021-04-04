@@ -1,0 +1,32 @@
+/* Button styles */
+
+.button {
+  display: block;
+  min-width: 120px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #fff;
+  background-color: lighten(#00b871, 5%);
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 3px 3px rgba(0,0,0,0.2);
+  outline: none;
+  cursor: pointer;
+  transition: background-color 150ms ease-in-out;
+}
+
+.button:hover {
+  background-color: lighten(#00b871, 3%);
+}
+
+.button_size_sm {
+  width: 100px;
+}
+
+.button_type_danger {
+  background-color: #e02f18;
+}
+
+.button_type_danger:hover {
+  background-color: #ca2f1b;
+}

@@ -1,0 +1,22 @@
+*,
+*::before,
+*::after {
+  font-family: 'Rubik', sans-serif;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+[v-cloak] {
+  display: none;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.image_size_mid {
+  width: 360px;
+  height: 240px;
+}
