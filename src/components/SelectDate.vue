@@ -2,7 +2,7 @@
   <div class="select-date">
 
     <div class="select-date__bar">
-      <div class="select-date__year-month">{{ curMonthName + ', ' + curYear }}</div>
+      <div class="select-date__year-month">{{ currentMonthName + ', ' + curYear }}</div>
       <div class="select-date__month-choosing">
         <button class="select-date__month-btn select-date__month-btn_prev"
           v-on:click="setPrevMonth"
@@ -35,7 +35,7 @@
               'select-date__td_selected': isSelected(day)
             }"
             v-on:click="setSelectedDate(day)"
-          >{{ day === undefined ? ' ' : day.getDate() }}</td>
+          >{{ isUndefined(day) ? ' ' : day.getDate() }}</td>
         </tr>
       </tbody>
     </table>
@@ -54,28 +54,28 @@ export default {
   },
   data() {
     return {
-      curMonth: new Date(),
+      currentMonth: new Date(),
       selectedDate: undefined,
       weekDayNames: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
     }
   },
   computed: {
-    curMonthName() {
-      return this.curMonth.toLocaleDateString('ru', { month: 'long' })
+    currentMonthName() {
+      return this.currentMonth.toLocaleDateString('ru', { month: 'long' })
     },
     curYear() {
-      return this.curMonth.getFullYear()
+      return this.currentMonth.getFullYear()
     },
     currentMonthWeeks() {
       // Dates filling
 
-      const lastDay = new Date(this.curMonth.getFullYear(), this.curMonth.getMonth() + 1, 0)
+      const lastDay = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 0)
 
       const weeks = []
       let date
 
       for (let day = 1; day <= lastDay.getDate(); day++) {
-        date = new Date(this.curMonth.getFullYear(), this.curMonth.getMonth(), day)
+        date = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth(), day)
 
         if (date.getDate() === 1 ||
           date.getDay() === 1) {
@@ -89,13 +89,14 @@ export default {
 
       const emptyCellsCountOfFirstWeek = 7 - weeks[0].length
       const emptyCellsCountOfLastWeek = 7 - weeks[weeks.length - 1].length
+      const plug = undefined
 
       for (let i = 0; i < emptyCellsCountOfFirstWeek ; i++) {
-        weeks[0].unshift(undefined)
+        weeks[0].unshift(plug)
       }
 
       for (let i = 0; i < emptyCellsCountOfLastWeek; i++) {
-        weeks[weeks.length - 1].push(undefined)
+        weeks[weeks.length - 1].push(plug)
       }
 
       return weeks
@@ -109,28 +110,27 @@ export default {
         return undefined
       }
     },
-    initCurMonth() {
+    initcurrentMonth() {
       if (this.selectedDate === undefined) return new Date()
       else return this.selectedDate
     },
     initData() {
       this.selectedDate = this.initSelectedDate()
-      this.curMonth = this.initCurMonth()
+      this.currentMonth = this.initcurrentMonth()
     },
 
     isDate(date) {
       return date instanceof Date
+    },
+    isUndefined(date) {
+      return date === undefined
     },
     isSelected(date) {
       if (!this.isDate(date) ||
         this.selectedDate === undefined
       ) return false
 
-      return (
-        this.selectedDate.getFullYear() === date.getFullYear() &&
-        this.selectedDate.getMonth() === date.getMonth() &&
-        this.selectedDate.getDate() === date.getDate()
-      )
+      return this.datesAreEqual(this.selectedDate, date)
     },
     datesAreEqual(a, b) {
       return (
@@ -141,21 +141,21 @@ export default {
     },
     
     setPrevMonth() {
-      this.curMonth = new Date(
-        this.curMonth.getFullYear(),
-        this.curMonth.getMonth() - 1,
+      this.currentMonth = new Date(
+        this.currentMonth.getFullYear(),
+        this.currentMonth.getMonth() - 1,
         1
       )
     },
     setNextMonth() {
-      this.curMonth = new Date(
-        this.curMonth.getFullYear(),
-        this.curMonth.getMonth() + 1, 
+      this.currentMonth = new Date(
+        this.currentMonth.getFullYear(),
+        this.currentMonth.getMonth() + 1, 
         1
       )
     },
     setSelectedDate(date) {
-      if (this.selectedDate === undefined) {
+      if (this.isUndefined(this.selectedDate)) {
         this.selectedDate = date
       }
       else if (this.datesAreEqual(this.selectedDate, date)) {
